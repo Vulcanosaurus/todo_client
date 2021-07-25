@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+
 import { gql, useMutation } from "@apollo/client";
 
 const UPDATE_TODO = gql`
@@ -19,7 +20,9 @@ export default function ToDoListItem(props) {
       className="to_do_list_item"
     >
       <td>
-        <Link to={props.id}>{props.title}</Link>
+        <Link to={{ pathname: props.id, state: { id: props.id } }}>
+          {props.title}
+        </Link>
       </td>
       <td> {props.type}</td>
       <td> {props.createdAt}</td>

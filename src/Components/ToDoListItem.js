@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { css, cx } from "@emotion/css";
 
 import { gql, useMutation } from "@apollo/client";
 
@@ -12,22 +13,27 @@ const UPDATE_TODO = gql`
   }
 `;
 
+const table_cell = css`
+  font-size: 20px;
+  border: 1px solid black;
+  padding: 1em;
+  text-align: left;
+`;
+
 export default function ToDoListItem(props) {
   const [update_todo] = useMutation(UPDATE_TODO);
   return (
-    <tr
-      style={{ textAlign: "center", margin: "auto" }}
-      className="to_do_list_item"
-    >
-      <td>
+    <tr>
+      <td className={cx(table_cell)}>
         <Link to={{ pathname: props.id, state: { id: props.id } }}>
           {props.title}
         </Link>
       </td>
-      <td> {props.type}</td>
-      <td> {props.createdAt}</td>
-      <td>
+      <td className={cx(table_cell)}> {props.type}</td>
+      <td className={cx(table_cell)}> {props.createdAt}</td>
+      <td className={cx(table_cell)}>
         <input
+          className={css``}
           type="checkbox"
           name="isDone"
           id="isDone"

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useQuery, gql } from "@apollo/client";
 
-import { css } from "@emotion/react";
+import { css, cx } from "@emotion/css";
 
 import ToDoListItem from "./ToDoListItem";
 
@@ -17,6 +17,10 @@ const GET_TODO_ALL = gql`
       isDone
     }
   }
+`;
+
+const form_item = css`
+  margin: 0.5em;
 `;
 
 function ToDoList() {
@@ -67,81 +71,113 @@ function ToDoList() {
 
   return (
     <div className="App">
-      <label htmlFor="order">Order by:</label>
-      <select
-        name="order"
-        value={orderBy}
-        onChange={(e) => {
-          setOrderBy(e.target.value);
-        }}
+      <div
+        className={css`
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          width: 920px;
+          margin: auto;
+          margin-bottom: 1em;
+          text-align: center;
+          font-size: 18px;
+        `}
       >
-        <option value="DATE_ASC" default>
-          ASC
-        </option>
-        <option value="DATE_DESC">DESC</option>
-      </select>
-      <label htmlFor="filter">Type:</label>
-      <select
-        name="filter"
-        value={typeof filterBy === "object" ? "default" : filterBy}
-        onChange={(e) => {
-          if (e.target.value === "default") {
+        <div className={cx(form_item)}>
+          <label htmlFor="order">Order by:</label>
+          <select
+            name="order"
+            value={orderBy}
+            onChange={(e) => {
+              setOrderBy(e.target.value);
+            }}
+          >
+            <option value="DATE_ASC" default>
+              ASC
+            </option>
+            <option value="DATE_DESC">DESC</option>
+          </select>
+        </div>
+        <div className={cx(form_item)}>
+          <label htmlFor="filter">Type:</label>
+          <select
+            name="filter"
+            value={typeof filterBy === "object" ? "default" : filterBy}
+            onChange={(e) => {
+              if (e.target.value === "default") {
+                setFilterBy(["RH", "Tech", "Marketing", "Communication"]);
+                return null;
+              }
+              setFilterBy([e.target.value]);
+            }}
+          >
+            <option value="default" default>
+              Select...
+            </option>
+            <option value="RH">RH</option>
+            <option value="Tech">TECH</option>
+            <option value="Marketing">Marketing</option>
+            <option value="Communication">Communication</option>
+          </select>
+        </div>
+        <div className={cx(form_item)}>
+          <label htmlFor="isDone">Is Done ?</label>
+          <input
+            type="checkbox"
+            name="isDone"
+            checked={filterIsDone}
+            onChange={(e) => {
+              setFilterIsDone(e.target.checked);
+            }}
+          />
+        </div>
+        <div className={cx(form_item)}>
+          <label htmlFor="isOnlyBusiness">Only Business ?</label>
+          <input
+            type="checkbox"
+            name="isOnlyBusiness"
+            checked={filterOnlyBusiness.length === 0 ? false : true}
+            onChange={(e) => {
+              if (e.target.checked) {
+                setFilterOnlyBusiness(["Marketing", "Communication"]);
+              } else {
+                setFilterOnlyBusiness([]);
+              }
+            }}
+          />
+        </div>
+        <button
+          className={cx(form_item)}
+          onClick={(e) => {
+            e.preventDefault();
+            setOrderBy("DATE_ASC");
             setFilterBy(["RH", "Tech", "Marketing", "Communication"]);
-            return null;
-          }
-          setFilterBy([e.target.value]);
-        }}
-      >
-        <option value="default" default>
-          Select...
-        </option>
-        <option value="RH">RH</option>
-        <option value="Tech">TECH</option>
-        <option value="Marketing">Marketing</option>
-        <option value="Communication">Communication</option>
-      </select>
-      <label htmlFor="isDone">Is Done ?</label>
-      <input
-        type="checkbox"
-        name="isDone"
-        checked={filterIsDone}
-        onChange={(e) => {
-          setFilterIsDone(e.target.checked);
-        }}
-      />
-      <label htmlFor="isOnlyBusiness">Only Business ?</label>
-      <input
-        type="checkbox"
-        name="isOnlyBusiness"
-        checked={filterOnlyBusiness.length === 0 ? false : true}
-        onChange={(e) => {
-          if (e.target.checked) {
-            setFilterOnlyBusiness(["Marketing", "Communication"]);
-          } else {
+            setFilterIsDone("");
             setFilterOnlyBusiness([]);
-          }
-        }}
-      />
-      <button
-        onClick={(e) => {
-          e.preventDefault();
-          setOrderBy("DATE_ASC");
-          setFilterBy(["RH", "Tech", "Marketing", "Communication"]);
-          setFilterIsDone("");
-          setFilterOnlyBusiness([]);
-        }}
-      >
-        Reset
-      </button>
+          }}
+        >
+          Reset
+        </button>
+      </div>
       <table
         className={css`
           margin: auto;
-          text-align: center;
+          border-collapse: collapse;
         `}
       >
-        <thead>
+        <thead
+          className={css`
+            font-size: 20px;
+          `}
+        >
           <tr>
-            <th>Title</th>
+            <th
+              className={css`
+                padding: 0.5em;
+              `}
+            >
+              Title
+            </th>
             <th>Type</th>
             <th>Created At</th>
             <th>Is Done</th>

@@ -1,5 +1,6 @@
 import React from "react";
 import { useParams } from "react-router-dom";
+import { css } from "@emotion/css";
 
 import { useQuery, gql } from "@apollo/client";
 
@@ -28,7 +29,18 @@ export default function ToDoDescription() {
   }
   let date = new Date(data.getTodoById?.createdAt);
   return (
-    <div className="to_do_list_item">
+    <div
+      className={css`
+        margin: auto;
+        margin-top: 1em;
+        width: 720px;
+        padding: 1em;
+        border: 1px solid black;
+      `}
+    >
+      <h2>
+        <i>To Do:</i>
+      </h2>
       <p>Title: {data.getTodoById?.title}</p>
       <p>Description: {data.getTodoById?.text}</p>
       <p>Type: {data.getTodoById?.type}</p>
